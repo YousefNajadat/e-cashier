@@ -29,4 +29,7 @@ class AppStrings {
   String get chooseValue {
     return AppLocalizations.of(context)!.choose_value;
   }
+  String get singIn {
+    return AppLocalizations.of(context)!.singIn;
+  }
 }

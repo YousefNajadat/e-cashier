@@ -4,6 +4,7 @@ class AppColors {
   static const primaryColor = Color(0xff1A1A1A);
   static const textWhiteColor = Color(0xffF5F5F5);
   static const hintTextColor = Color(0xff626262);
+  static const buttonColor = Color(0x1AFFFFFF);
 }
 
 // static const a = MaterialColor(

@@ -4,6 +4,7 @@ import 'package:e_cashier/core/utils/app_strings.dart';
 import 'package:e_cashier/core/utils/responsive_size_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import '../../data/models/branch_model.dart';
 import '../bloc/branch_bloc.dart';
 import '../cubit/translation/translation_cubit.dart';
@@ -21,31 +22,34 @@ class BranchSearchDropdown extends StatefulWidget {
 
 class _BranchSearchDropdownState extends State<BranchSearchDropdown> {
   final TextEditingController _searchController = TextEditingController();
-  final LayerLink _layerLink = LayerLink();
   final ScrollController _scrollController = ScrollController();
-  OverlayEntry? _overlayEntry;
   BranchModel? _selectedBranch;
   List<BranchModel> branches = [];
+  List<BranchModel> filterBranches = [];
   bool isArabic = false;
-  final FocusNode _focusNode = FocusNode(); // Added focus node
+  final FocusNode _focusNode = FocusNode();
+  bool _isDropdownOpen = false;
 
   @override
   void initState() {
     super.initState();
     _initialize();
-    _focusNode.addListener(_handleFocusChange); // Listen to focus changes
+    _focusNode.addListener(_handleFocusChange);
   }
 
   @override
   void dispose() {
-    _cleanUp();
-    _focusNode.dispose(); // Dispose focus node
+    _searchController.dispose();
+    _scrollController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
   void _handleFocusChange() {
-    if (!_focusNode.hasFocus && _overlayEntry != null) {
-      _removeOverlay();
+    if (!_focusNode.hasFocus && _isDropdownOpen) {
+      setState(() {
+        _isDropdownOpen = false;
+      });
     }
   }
 
@@ -57,138 +61,42 @@ class _BranchSearchDropdownState extends State<BranchSearchDropdown> {
     context.read<BranchBloc>().add(LoadBranches());
   }
 
-  void _cleanUp() {
-    _searchController.dispose();
-    _scrollController.dispose();
-    _removeOverlay();
+  void _selectBranch(BranchModel branch, String branchName) {
+    setState(() {
+      _selectedBranch = branch;
+      _searchController.text = branchName;
+      _isDropdownOpen = false;
+    });
+    widget.onChanged?.call(branch);
   }
 
-  void _removeOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
+  void _handleSearchChange(String value) {
+    setState(() {
+      _filterBranches(searchText: value);
+    });
   }
 
-  void _showOverlay(BuildContext context, List<BranchModel> branches) {
-    if (_overlayEntry != null) return;
-
-    final renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => _buildOverlayContent(context, branches, size),
-    );
-
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  Widget _buildOverlayContent(
-    BuildContext context,
-    List<BranchModel> branches,
-    Size size,
-  ) {
-    return Stack(
-      children: [
-        // This invisible GestureDetector covers the entire screen behind the overlay
-        Positioned.fill(
-          child: GestureDetector(
-            onTap: _removeOverlay,
-            behavior: HitTestBehavior.translucent,
-          ),
-        ),
-        Positioned(
-          width: responsiveWidth(context, 904),
-          height: responsiveHeight(context, 443),
-          child: CompositedTransformFollower(
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: Offset(0, size.height + 5),
-            child: Material(
-              borderRadius: BorderRadius.circular(responsiveFont(context, 8)),
-              color: Colors.transparent,
-              elevation: 0,
-              child: Container(
-                decoration: _buildOverlayDecoration(context),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    responsiveFont(context, 8),
-                  ),
-                  child: Container(
-                    width: responsiveWidth(context, 896),
-                    height: responsiveHeight(context, 104),
-                    color: AppColors.primaryColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: responsiveWidth(context, 8),
-                    ),
-                    child: Theme(
-                      data: _buildScrollbarTheme(context),
-                      child: Scrollbar(
-                        controller: _scrollController,
-                        thumbVisibility: true,
-                        trackVisibility: true,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            right: responsiveWidth(context, 8),
-                          ),
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            padding: EdgeInsets.zero,
-                            itemCount: branches.length,
-                            itemBuilder:
-                                (context, index) =>
-                                    _buildBranchItem(context, branches[index]),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  BoxDecoration _buildOverlayDecoration(BuildContext context) {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(responsiveFont(context, 8)),
-      boxShadow: [
-        BoxShadow(
-          color: const Color(0x1AFFFFFF),
-          blurRadius: 20,
-          spreadRadius: 0,
-          offset: const Offset(0, 0),
-        ),
-      ],
-    );
-  }
-
-  ThemeData _buildScrollbarTheme(BuildContext context) {
-    return Theme.of(context).copyWith(
-      scrollbarTheme: ScrollbarThemeData(
-        thumbColor: MaterialStateProperty.all(const Color(0xFFF5F5F5)),
-        trackColor: MaterialStateProperty.all(const Color(0x1AFFFFFF)),
-        thickness: MaterialStateProperty.all(responsiveWidth(context, 16)),
-        radius: Radius.circular(responsiveFont(context, 11)),
-        minThumbLength: responsiveHeight(context, 235),
-      ),
-    );
-  }
-
-  Widget _buildBranchItem(BuildContext context, BranchModel branch) {
-    final branchName = _getLocalizedBranchName(branch);
-    final servicesText = _getFormattedServices(branch);
-
-    return ListTile(
-      title: Text(
-        '$branchName$servicesText',
-        style: Styles(context: context).textWhiteColor_w400_30,
-      ),
-      onTap: () {
-        _selectBranch(branch, '$branchName$servicesText');
-      },
-    );
+  List<BranchModel> _filterBranches({String searchText = ''}) {
+    if (searchText.isEmpty) {
+      setState(() {
+        filterBranches = branches;
+      });
+      return filterBranches;
+    }
+    setState(() {
+      filterBranches =
+          branches.where((branch) {
+            return (branch.branchNameAr?.toLowerCase().contains(
+                      searchText.toLowerCase(),
+                    ) ??
+                    false) ||
+                (branch.branchNameEn?.toLowerCase().contains(
+                      searchText.toLowerCase(),
+                    ) ??
+                    false);
+          }).toList();
+    });
+    return filterBranches;
   }
 
   String _getLocalizedBranchName(BranchModel branch) {
@@ -213,51 +121,150 @@ class _BranchSearchDropdownState extends State<BranchSearchDropdown> {
     return serviceNames.isNotEmpty ? ' ($serviceNames)' : '';
   }
 
-  void _selectBranch(BranchModel branch, String branchName) {
-    setState(() {
-      _selectedBranch = branch;
-      _searchController.text = branchName;
-      widget.onChanged?.call(branch);
-    });
-    _removeOverlay();
-  }
+  Widget _buildBranchItem(BuildContext context, BranchModel branch) {
+    final branchName = _getLocalizedBranchName(branch);
+    final servicesText = _getFormattedServices(branch);
 
-  List<BranchModel> _filterBranches(String searchText) {
-    if (searchText.isEmpty) return branches;
-
-    return branches.where((branch) {
-      return (branch.branchNameAr?.toLowerCase().contains(
-                searchText.toLowerCase(),
-              ) ??
-              false) ||
-          (branch.branchNameEn?.toLowerCase().contains(
-                searchText.toLowerCase(),
-              ) ??
-              false);
-    }).toList();
+    return ListTile(
+      title: Text(
+        '$branchName$servicesText',
+        style: Styles(context: context).textWhiteColor_w400_30,
+      ),
+      onTap: () {
+        _selectBranch(branch, '$branchName$servicesText');
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: BlocBuilder<BranchBloc, BranchState>(
-        builder: (context, state) {
-          if (state is BranchLoading) {
-            return const Center(child: CircularProgressIndicator());
+    return BlocBuilder<BranchBloc, BranchState>(
+      builder: (context, state) {
+        if (state is BranchLoading) {
+          return loadingWidget(context);
+        }
+        if (state is BranchError) {
+          return Center(child: Text(state.message));
+        }
+        if (state is BranchSuccess) {
+          branches = state.responseData;
+          // filterBranches = state.responseData;
+          if (branches.isEmpty) {
+            return const Center(child: Text('No branches found'));
           }
-          if (state is BranchError) {
-            return Center(child: Text(state.message));
-          }
-          if (state is BranchSuccess) {
-            branches = state.responseData;
-            if (branches.isEmpty) {
-              return const Center(child: Text('No branches found'));
-            }
-            return _buildSearchField(context);
-          }
-          return const SizedBox();
-        },
+          return Column(
+            children: [
+              _buildSearchField(context),
+              if (_isDropdownOpen) ...[
+                Gap(responsiveHeight(context, 16)),
+                _buildDropDown(context, filterBranches),
+              ],
+            ],
+          );
+        }
+        return const SizedBox();
+      },
+    );
+  }
+
+  Widget _buildDropDown(
+    BuildContext context,
+    List<BranchModel> filterBranches,
+  ) {
+    var height = responsiveHeight(context, 120) * filterBranches.length;
+    return SizedBox(
+      width: responsiveWidth(context, 904),
+      height:
+          height <= responsiveHeight(context, 443)
+              ? height
+              : responsiveHeight(context, 443),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(responsiveFont(context, 8)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.buttonColor,
+              blurRadius: 20,
+              spreadRadius: 0,
+              offset: const Offset(0, 0),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(responsiveFont(context, 8)),
+          child: Container(
+            width: responsiveWidth(context, 896),
+            height: responsiveHeight(context, 104),
+            color: AppColors.primaryColor,
+            padding: EdgeInsets.symmetric(
+              horizontal: responsiveWidth(context, 8),
+            ),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                scrollbarTheme: ScrollbarThemeData(
+                  thumbColor: MaterialStateProperty.all(
+                    AppColors.textWhiteColor,
+                  ),
+                  trackColor: MaterialStateProperty.all(
+                    AppColors.buttonColor,
+                  ),
+                  thickness: MaterialStateProperty.all(
+                    responsiveWidth(context, 16),
+                  ),
+                  radius: Radius.circular(responsiveFont(context, 11)),
+                  minThumbLength: responsiveHeight(context, 235),
+                ),
+              ),
+              child: Scrollbar(
+                controller: _scrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: Padding(
+                  padding: EdgeInsets.only(right: responsiveWidth(context, 8)),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.zero,
+                    itemCount: filterBranches.length,
+                    itemBuilder:
+                        (context, index) =>
+                            _buildBranchItem(context, filterBranches[index]),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget loadingWidget(BuildContext context) {
+    return Container(
+      width: responsiveWidth(context, 904),
+      height: responsiveHeight(context, 104),
+      decoration: _buildSearchFieldDecoration(context),
+      padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 27)),
+      child: Stack(
+        children: [
+          TextField(
+            readOnly: true,
+            decoration: InputDecoration(
+              suffixIcon: const Icon(
+                Icons.keyboard_arrow_down_sharp,
+                color: Colors.white,
+              ),
+              border: InputBorder.none,
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: SizedBox(
+              height: responsiveHeight(context, 50),
+              width: responsiveHeight(context, 50),
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -266,25 +273,42 @@ class _BranchSearchDropdownState extends State<BranchSearchDropdown> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(_focusNode);
-        _toggleOverlay();
+        setState(() {
+          _isDropdownOpen = !_isDropdownOpen;
+        });
       },
       child: Container(
         width: responsiveWidth(context, 904),
         height: responsiveHeight(context, 104),
         decoration: _buildSearchFieldDecoration(context),
         padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 27)),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                decoration: _buildInputDecoration(context),
-                onChanged: (value) => _handleSearchChange(value),
-                focusNode: _focusNode, // Assign focus node
-                style: Styles(context: context).textWhiteColor_w400_30,
-              ),
+        child: TextField(
+          controller: _searchController,
+          onTap: () {
+            setState(() {
+              _isDropdownOpen = true;
+            });
+            _handleSearchChange(_searchController.text.split('(')[0].trim());
+          },
+          decoration: InputDecoration(
+            suffixIcon: InkWell(
+              onTap: () {
+                _handleSearchChange(
+                  _searchController.text.split('(')[0].trim(),
+                );
+                setState(() {
+                  _isDropdownOpen = !_isDropdownOpen;
+                });
+              },
+              child: Icon(Icons.keyboard_arrow_down_sharp, color: Colors.white),
             ),
-          ],
+            hintText: AppStrings(context: context).chooseValue,
+            hintStyle: Styles(context: context).hintTextColor_w400_30,
+            border: InputBorder.none,
+          ),
+          onChanged: (value) => _handleSearchChange(value),
+          focusNode: _focusNode,
+          style: Styles(context: context).textWhiteColor_w400_30,
         ),
       ),
     );
@@ -294,40 +318,9 @@ class _BranchSearchDropdownState extends State<BranchSearchDropdown> {
     return BoxDecoration(
       border: Border.all(
         width: responsiveWidth(context, 0.8),
-        color: const Color(0xFFF5F5F5),
+        color: AppColors.textWhiteColor,
       ),
-      borderRadius: BorderRadius.circular(responsiveFont(context, 8)),
+      borderRadius: BorderRadius.circular(responsiveFont(context, 6)),
     );
-  }
-
-  InputDecoration _buildInputDecoration(BuildContext context) {
-    return InputDecoration(
-      suffixIcon: InkWell(
-        onTap: () {
-          if (_overlayEntry == null) {
-            _showOverlay(context, _filterBranches(_searchController.text));
-          } else {
-            _removeOverlay();
-          }
-        },
-        child: const Icon(Icons.keyboard_arrow_down_sharp, color: Colors.white),
-      ),
-      hintText: AppStrings(context: context).chooseValue,
-      hintStyle: Styles(context: context).hintTextColor_w400_30,
-      border: InputBorder.none,
-    );
-  }
-
-  void _toggleOverlay() {
-    if (_overlayEntry == null) {
-      _showOverlay(context, _filterBranches(_searchController.text));
-    } else {
-      _removeOverlay();
-    }
-  }
-
-  void _handleSearchChange(String value) {
-    _removeOverlay();
-    _showOverlay(context, _filterBranches(value));
   }
 }

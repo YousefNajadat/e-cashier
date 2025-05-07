@@ -4,7 +4,7 @@ import 'service_model.dart';
 
 class BranchModel extends Branch {
   BranchModel({
-    required int id,
+    int? id,
     String? branchNameAr,
     String? branchNameEn,
     List<Service>? services,

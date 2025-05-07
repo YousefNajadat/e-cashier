@@ -1,13 +1,13 @@
 import 'package:e_cashier/features/branch_selection/domain/entities/service.dart';
 
 class Branch {
-  final int id;
+  final int? id;
   final String? branchNameAr;
   final String? branchNameEn;
   final List<Service>? services;
 
   Branch({
-    required this.id,
+     this.id,
     this.branchNameAr,
     this.branchNameEn,
     this.services,

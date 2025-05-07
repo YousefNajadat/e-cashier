@@ -22,7 +22,7 @@ class LanguageCodes {
 }
 
 class Languages {
-  static const arabic = 'العربيه';
+  static const arabic = 'العربية';
   static const english = 'English';
 }
 

@@ -5,6 +5,7 @@ import '../../features/branch_selection/data/datasources/branch_remote_data_sour
 import '../../features/branch_selection/data/repositories/branch_repository_impl.dart';
 import '../../features/branch_selection/domain/usecases/branch_usecase.dart';
 import '../../features/branch_selection/presentation/bloc/branch_bloc.dart';
+import '../../features/branch_selection/presentation/cubit/show_sign_in_button/show_sign_in_button_cubit.dart';
 import '../../features/branch_selection/presentation/cubit/translation/translation_cubit.dart';
 import '../network/e_cashier_rest.dart';
 
@@ -19,7 +20,6 @@ Future<void> setupDependencies() async {
     BranchRemoteDataSource(getIt<ECashierRest>()),
   );
 
-
   // Repositories
   getIt.registerSingleton<BranchRepository>(
     BranchRepository(getIt<BranchRemoteDataSource>()),
@@ -33,4 +33,5 @@ Future<void> setupDependencies() async {
   // Blocs & Cubits
   getIt.registerFactory<TranslationCubit>(() => TranslationCubit());
   getIt.registerFactory<BranchBloc>(() => BranchBloc(getIt<BranchUseCase>()));
+  getIt.registerFactory<ShowSignInButtonCubit>(() => ShowSignInButtonCubit());
 }

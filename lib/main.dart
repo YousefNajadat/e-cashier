@@ -6,6 +6,7 @@ import 'package:nested/nested.dart';
 import 'core/constant/page_routes.dart';
 import 'core/di/injector.dart';
 import 'features/branch_selection/presentation/bloc/branch_bloc.dart';
+import 'features/branch_selection/presentation/cubit/show_sign_in_button/show_sign_in_button_cubit.dart';
 import 'features/branch_selection/presentation/cubit/translation/translation_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
   List<SingleChildWidget> get providers {
     return [
       BlocProvider(create: (_) => getIt<TranslationCubit>()),
+      BlocProvider(create: (_) => getIt<ShowSignInButtonCubit>()),
       BlocProvider(create: (_) => getIt<BranchBloc>()),
     ];
   }
