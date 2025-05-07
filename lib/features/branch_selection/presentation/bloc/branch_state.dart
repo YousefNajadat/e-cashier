@@ -13,20 +13,19 @@ class BranchLoading extends BranchState {
   List<Object> get props => [];
 }
 
-class BranchLoaded extends BranchState {
-  final List<BranchModel> branches;
-  final List<BranchModel> filteredBranches;
+final class BranchSuccess extends BranchState {
+  final List<BranchModel> responseData;
 
-   BranchLoaded(this.branches, this.filteredBranches);
+  BranchSuccess({required this.responseData});
 
   @override
-  List<Object> get props => [branches, filteredBranches];
+  List<Object> get props => [responseData];
 }
 
-class BranchError extends BranchState {
+final class BranchError extends BranchState {
   final String message;
 
-   BranchError(this.message);
+  BranchError(this.message);
 
   @override
   List<Object> get props => [message];

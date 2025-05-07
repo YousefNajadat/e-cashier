@@ -25,4 +25,8 @@ class AppStrings {
   String get pleaseChooseTheBranch {
     return AppLocalizations.of(context)!.please_choose_the_branch;
   }
+
+  String get chooseValue {
+    return AppLocalizations.of(context)!.choose_value;
+  }
 }

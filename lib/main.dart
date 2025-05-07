@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:nested/nested.dart';
 import 'core/constant/page_routes.dart';
 import 'core/di/injector.dart';
+import 'features/branch_selection/presentation/bloc/branch_bloc.dart';
 import 'features/branch_selection/presentation/cubit/translation/translation_cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,7 +31,10 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   List<SingleChildWidget> get providers {
-    return [BlocProvider(create: (_) => getIt<TranslationCubit>())];
+    return [
+      BlocProvider(create: (_) => getIt<TranslationCubit>()),
+      BlocProvider(create: (_) => getIt<BranchBloc>()),
+    ];
   }
 
   @override

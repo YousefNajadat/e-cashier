@@ -23,36 +23,41 @@ class AppBackgroundScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background GIF
-          imageWidget(
-            context,
-            GifsPath.backgroundGif,
-            1920,
-            1080,
-            fit: BoxFit.cover,
-          ),
-
-          // Content column
-          Column(
-            children: [
-              // App name at the top with padding
-              Gap(responsiveHeight(context, topPadding)),
-              Center(
-                child: svgWidget(
-                  context,
-                  ImagesPath.app_name,
-                  appNameHeight,
-                  appNameWidth,
+      // resizeToAvoidBottomInset: false,
+      body: Listener(
+        onPointerDown: (_) => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
+        // Makes sure even empty areas register taps
+        child: Stack(
+          children: [
+            // Background GIF
+            imageWidget(
+              context,
+              GifsPath.backgroundGif,
+              1920,
+              1080,
+              fit: BoxFit.cover,
+            ),
+            // Content column
+            Column(
+              children: [
+                // App name at the top with padding
+                Gap(responsiveHeight(context, topPadding)),
+                Center(
+                  child: svgWidget(
+                    context,
+                    ImagesPath.app_name,
+                    appNameHeight,
+                    appNameWidth,
+                  ),
                 ),
-              ),
 
-              // Expanded area for the child content (centered)
-              Expanded(child: Center(child: child)),
-            ],
-          ),
-        ],
+                // Expanded area for the child content (centered)
+                Expanded(child: Center(child: child)),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

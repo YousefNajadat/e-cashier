@@ -1,21 +1,17 @@
-import 'package:e_cashier/core/constant/icons_path.dart';
 import 'package:e_cashier/core/utils/Styles.dart';
 import 'package:e_cashier/core/utils/app_strings.dart';
 import 'package:e_cashier/core/utils/responsive_size_helper.dart';
-import 'package:e_cashier/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import '../../../../core/widgets/app_background_scaffold.dart';
-import '../cubit/translation/translation_cubit.dart';
+import '../widgets/branch_search_dropdown.dart';
 
 class BranchSelection extends StatelessWidget {
-  const BranchSelection({super.key});
 
+bool isShowSignInButton = false;
   @override
   Widget build(BuildContext context) {
-    return // Example usage:
-    AppBackgroundScaffold(
+    return AppBackgroundScaffold(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 88)),
         child: Column(
@@ -30,6 +26,13 @@ class BranchSelection extends StatelessWidget {
               ),
             ),
             Gap(responsiveHeight(context, 64)),
+            BranchSearchDropdown(
+              onChanged: (branch) {
+                print(branch!.branchNameAr!);
+                isShowSignInButton = true;
+              },
+            ),
+            if(isShowSignInButton)TextButton(onPressed: () {}, child: Text('SingIn')),
           ],
         ),
       ),

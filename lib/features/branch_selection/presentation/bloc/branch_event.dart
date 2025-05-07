@@ -8,12 +8,3 @@ class LoadBranches extends BranchEvent {
   @override
   List<Object> get props => [];
 }
-
-class SearchBranches extends BranchEvent {
-  final String query;
-
-   SearchBranches(this.query);
-
-  @override
-  List<Object> get props => [query];
-}
