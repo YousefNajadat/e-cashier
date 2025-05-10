@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Size displaySize(BuildContext context) {
   //debugPrint('Size = ' + MediaQuery.of(context).size.toString());
-  return MediaQuery.of(context).size;
+  return MediaQuery.sizeOf(context);
 }
 
 double displayHeight(BuildContext context) {
@@ -24,7 +24,7 @@ double displayWidth(BuildContext context) {
 /// Returns a double value for the responsive height.
 double responsiveHeight(BuildContext context, double value,
     {double baseHeight = 1920}) {
-  double screenHeight = MediaQuery.of(context).size.height;
+  double screenHeight = MediaQuery.sizeOf(context).height;
   return (value / baseHeight) * screenHeight;
 }
 
@@ -37,11 +37,11 @@ double responsiveHeight(BuildContext context, double value,
 /// Returns a double value for the responsive width.
 double responsiveWidth(BuildContext context, double value,
     {double baseWidth = 1080}) {
-  double screenWidth = MediaQuery.of(context).size.width;
+  double screenWidth = MediaQuery.sizeOf(context).width;
   return (value / baseWidth) * screenWidth;
 }
 
 double responsiveFont(BuildContext context, double value) {
-  double screenWidth = MediaQuery.of(context).size.width;
+  double screenWidth = MediaQuery.sizeOf(context).width;
   return value * (screenWidth / 3) / 100;
 }

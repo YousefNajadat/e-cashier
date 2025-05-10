@@ -6,8 +6,7 @@ import '../../../../../core/data/local/storage_helper.dart';
 part 'translation_state.dart';
 
 class TranslationCubit extends Cubit<TranslationState> {
-  TranslationCubit()
-      : super(const TranslationInitial(currentLocale: Locale('en')));
+  TranslationCubit() : super(const TranslationInitial(currentLocale: Locale('en')));
 
   void toggleLanguage() async{
     final currentLang = state.currentLocale.languageCode;
@@ -15,7 +14,7 @@ class TranslationCubit extends Cubit<TranslationState> {
         ? LanguageLocalCodes.arabic
         : LanguageLocalCodes.english;
     print(newLocale.toString());
-    StorageHelper.setLang(newLocale.toString());
+    await StorageHelper.setLang(newLocale.toString());
     emit(TranslationInitial(currentLocale: newLocale));
   }
 

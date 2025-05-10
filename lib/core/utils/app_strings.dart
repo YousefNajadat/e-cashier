@@ -29,7 +29,60 @@ class AppStrings {
   String get chooseValue {
     return AppLocalizations.of(context)!.choose_value;
   }
+
   String get singIn {
     return AppLocalizations.of(context)!.singIn;
+  }
+
+  String get please_enter_your_phone_number {
+    return AppLocalizations.of(context)!.please_enter_your_phone_number;
+  }
+
+  String get phone_Number {
+    return AppLocalizations.of(context)!.phone_Number;
+  }
+
+  String get kioskSettings {
+    return AppLocalizations.of(context)!.kioskSettings;
+  }
+
+  String get check_for_updates {
+    return AppLocalizations.of(context)!.check_for_updates;
+  }
+
+  String get version {
+    return AppLocalizations.of(context)!.version;
+  }
+
+  String get employeeNumber {
+    return AppLocalizations.of(context)!.employeeNumber;
+  }
+
+  String get enter_employee_number {
+    return AppLocalizations.of(context)!.enter_employee_number;
+  }
+
+  String get password {
+    return AppLocalizations.of(context)!.password;
+  }
+
+  String get enter_password {
+    return AppLocalizations.of(context)!.enter_password;
+  }
+
+  String get confirm {
+    return AppLocalizations.of(context)!.confirm;
+  }
+
+  String get requiredField {
+    return AppLocalizations.of(context)!.requiredField;
+  }
+
+  String get passwordLength {
+    return AppLocalizations.of(context)!.passwordLength;
+  }
+
+  String get passwordNumberValidation {
+    return AppLocalizations.of(context)!.passwordNumberValidation;
   }
 }

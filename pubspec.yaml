@@ -46,6 +46,7 @@ dependencies:
   gap: ^3.0.1
   intl_phone_field: ^3.2.0
   dartz: ^0.10.1
+  package_info_plus: ^8.3.0
 
 dev_dependencies:
   flutter_test:

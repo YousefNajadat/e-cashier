@@ -5,5 +5,18 @@
   "please_choose_the_language_arabic": "الرجاء اختيار اللغة",
   "please_choose_the_branch": "Please choose the branch",
   "choose_value": "Choose Value",
-  "singIn": "Sing In"
+  "singIn": "Sing In",
+  "phone_Number": "Phone Number",
+  "kioskSettings": "Kiosk Settings",
+  "check_for_updates": "Check for updates",
+  "version": "Version",
+  "employeeNumber": "Employee Number",
+  "enter_employee_number": "Enter employee number",
+  "password": "Password",
+  "enter_password": "Enter password",
+  "confirm": "Confirm",
+  "requiredField": "This field is required",
+  "passwordLength": "Password must be at least 6 characters",
+  "passwordNumberValidation": "Password must contain number",
+  "please_enter_your_phone_number": "Please enter your phone number"
 }

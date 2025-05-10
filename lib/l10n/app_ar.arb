@@ -5,5 +5,18 @@
   "please_choose_the_language_arabic": "الرجاء اختيار اللغة",
   "please_choose_the_branch": "الرجاء اختيار الفرع",
   "choose_value": "اختر القيمة",
-  "singIn": "تسجيل الدخول"
+  "singIn": "تسجيل الدخول",
+  "phone_Number": "رقم التليفون",
+  "kioskSettings": "إعدادات الكشك",
+  "check_for_updates": "تحقق من وجود تحديثات",
+  "version": "إصدار",
+  "employeeNumber": "رقم الموظف",
+  "enter_employee_number": "أدخل رقم الموظف",
+  "password": "كلمة المرور",
+  "enter_password": "أدخل كلمة المرور",
+  "confirm": "تأكيد",
+  "requiredField": "هذا الحقل مطلوب",
+  "passwordLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+  "passwordNumberValidation": "يجب أن تحتوي كلمة المرور على رقم",
+  "please_enter_your_phone_number": "الرجاء إدخال رقم هاتفك"
 }

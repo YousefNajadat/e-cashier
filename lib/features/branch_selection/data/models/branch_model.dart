@@ -21,9 +21,7 @@ class BranchModel extends Branch {
       branchNameAr: json['branchNameAr'],
       branchNameEn: json['branchNameEn'],
       services: json['services'] != null
-          ? (json['services'] as List)
-          .map((service) => ServiceModel.fromJson(service))
-          .toList()
+          ? (json['services'] as List).map((service) => ServiceModel.fromJson(service)).toList()
           : null,
     );
   }

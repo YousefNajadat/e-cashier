@@ -29,7 +29,7 @@ class StorageHelper {
   }
 
   // Permissions
-  static setPermissions(Map<String, dynamic> permissions) {
+  static setPermissions(bool permissions) {
     _storage.write(StorageKeys.permissions, permissions);
   }
 
