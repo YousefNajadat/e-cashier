@@ -39,7 +39,11 @@ Widget buildFloatingActionButton(
                 )
                 : const SizedBox(),
             showTrailButton
-                ? CustomButton(onPressed: onPressed, text: text)
+                ? CustomButton(
+                  onPressed: onPressed,
+                  text: text,
+                  isLoading: isLoading,
+                )
                 : const SizedBox(),
           ],
         ),

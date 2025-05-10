@@ -39,7 +39,7 @@ class CustomButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(responsiveFont(context, 6)),
       ),
       color: buttonColor,
-      onPressed: onPressed,
+      onPressed: isLoading ? null : onPressed,
       child:
           isLoading
               ? CircularProgressIndicator()

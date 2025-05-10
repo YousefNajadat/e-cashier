@@ -3,5 +3,5 @@ class ApiRoutes {
   static const String baseUrl = "https://ecashiertest.markaziaapis.com/api/";
   static const String logInApi = 'Users/loginToken';
   static const String getBranch = "Branch/GetBranch";
-  static const String signUpApi = "add-user";
+  static const String  getSettingsBybranchId = "Kiosk/GetSettingsBybranchId";
 }
