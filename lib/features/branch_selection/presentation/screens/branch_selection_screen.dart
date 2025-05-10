@@ -21,6 +21,7 @@ class BranchSelection extends StatelessWidget {
     return BlocProvider(
       create: (_) => BranchBloc(getIt())..add(LoadBranches()),
       child: AppBackgroundScaffold(
+        padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 88)),
         floatingActionButton: buildFloatingActionButton(
           context,
           text: AppStrings(context: context).singIn,
@@ -28,18 +29,22 @@ class BranchSelection extends StatelessWidget {
             context.pushAndRemoveUntil(ChangeLanguageScreen());
           },
         ),
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child:
-                AppTexts(
-                  context: context,
-                  text: AppStrings(context: context).pleaseChooseTheBranch,
-                ).textWhiteColor_w500_38,
-          ),
-          Gap(responsiveHeight(context, 64)),
-          BranchSearchDropdown(onChanged: (branch) {}),
-        ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child:
+                  AppTexts(
+                    context: context,
+                    text: AppStrings(context: context).pleaseChooseTheBranch,
+                  ).textWhiteColor_w500_38,
+            ),
+            Gap(responsiveHeight(context, 64)),
+            BranchSearchDropdown(onChanged: (branch) {}),
+          ],
+        ),
       ),
     );
   }

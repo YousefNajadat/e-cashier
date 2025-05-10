@@ -8,10 +8,9 @@ import '../../../../core/data/local/storage_helper.dart';
 import '../../../../core/widgets/app_background_scaffold.dart';
 import '../../../../core/widgets/floating_action_button.dart';
 import '../../../branch_selection/presentation/screens/branch_selection_screen.dart';
-import '../../../services_settings/presentation/screens/services_settings _screen.dart';
 
-class SettingScreen extends StatelessWidget {
-  const SettingScreen({super.key});
+class ServicesSettingsScreen extends StatelessWidget {
+  const ServicesSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +18,9 @@ class SettingScreen extends StatelessWidget {
       isDrawerWidget: true,
       floatingActionButton: buildFloatingActionButton(
         showLeadingButton: true,
-        showTrailButton: false,
         leadingButtonText: AppStrings(context: context).back,
         context,
-        text: AppStrings(context: context).singIn,
+        text: AppStrings(context: context).confirm,
         onPressed: () {
           // context.pushAndRemoveUntil(ChangeLanguageScreen());
         },
@@ -33,9 +31,10 @@ class SettingScreen extends StatelessWidget {
 
   Widget settingsListView(BuildContext context) {
     List<String> settingsTexts = [
-      AppStrings(context: context).serviceControls,
-      AppStrings(context: context).branchSelection,
-      AppStrings(context: context).signOut,
+      AppStrings(context: context).sparePartsOrder,
+      AppStrings(context: context).serviceOrder,
+      AppStrings(context: context).vehicleOrder,
+      AppStrings(context: context).promissoryNote,
     ];
     return ListView.separated(
       itemCount: settingsTexts.length,
@@ -57,7 +56,7 @@ class SettingScreen extends StatelessWidget {
         TextButton(
           onPressed: () {
             if (index == 0) {
-              context.push(ServicesSettingsScreen());
+              // context.push(ServicesSettings());
             } else if (index == 1) {
               context.push(BranchSelection());
             } else if (index == 2) {
@@ -74,11 +73,6 @@ class SettingScreen extends StatelessWidget {
             ],
           ),
         ),
-        if (index == 2)
-          Divider(
-            color: AppColors.dividerColor,
-            height: responsiveHeight(context, 0.4),
-          ),
       ],
     );
   }

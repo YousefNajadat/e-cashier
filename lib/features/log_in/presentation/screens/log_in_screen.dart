@@ -29,7 +29,9 @@ class LogInScreen extends StatelessWidget {
           ).showSnackBar(SnackBar(content: Text(state.message)));
         } else if (state is LogInSuccess) {
           StorageHelper.setAccessToken(state.responseData.accessToken);
-          StorageHelper.setPermissions(state.responseData.permissions.accessLogOut);
+          StorageHelper.setPermissions(
+            state.responseData.permissions.accessLogOut,
+          );
           // navigate to settings screen
           context.pushAndRemoveUntil(SettingScreen());
         } else {
@@ -40,6 +42,9 @@ class LogInScreen extends StatelessWidget {
           (context, state) => Form(
             key: _formKey,
             child: AppBackgroundScaffold(
+              padding: EdgeInsets.symmetric(
+                horizontal: responsiveWidth(context, 171),
+              ),
               floatingActionButton: buildFloatingActionButton(
                 context,
                 isLoading: state is LogInLoading,
@@ -58,23 +63,28 @@ class LogInScreen extends StatelessWidget {
                 },
               ),
               isDrawerWidget: true,
-              children: [
-                Gap(responsiveHeight(context, 64)),
-                CustomTextFormField(
-                  controller: employeeNumberController,
-                  labelText: AppStrings(context: context).employeeNumber,
-                  hintText: AppStrings(context: context).enter_employee_number,
-                  isRequired: true,
-                ),
-                Gap(responsiveHeight(context, 56)),
-                CustomTextFormField(
-                  controller: passwordController,
-                  labelText: AppStrings(context: context).password,
-                  hintText: AppStrings(context: context).enter_password,
-                  isRequired: true,
-                  isPassword: true,
-                ),
-              ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Gap(responsiveHeight(context, 64)),
+                  CustomTextFormField(
+                    controller: employeeNumberController,
+                    labelText: AppStrings(context: context).employeeNumber,
+                    hintText:
+                        AppStrings(context: context).enter_employee_number,
+                    isRequired: true,
+                  ),
+                  Gap(responsiveHeight(context, 56)),
+                  CustomTextFormField(
+                    controller: passwordController,
+                    labelText: AppStrings(context: context).password,
+                    hintText: AppStrings(context: context).enter_password,
+                    isRequired: true,
+                    isPassword: true,
+                  ),
+                ],
+              ),
             ),
           ),
     );

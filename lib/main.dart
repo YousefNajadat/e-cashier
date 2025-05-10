@@ -46,6 +46,9 @@ class MyApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             localeResolutionCallback: (locale, supportedLocales) => locale,
             theme: ThemeData(
+              appBarTheme: AppBarTheme(
+                elevation: 0, // This removes the shadow from all App Bars.
+              ),
               colorScheme: ColorScheme.fromSeed(
                 seedColor: AppColors.primaryColor,
                 surface: AppColors.primaryColor,

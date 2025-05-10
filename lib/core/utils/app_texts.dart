@@ -15,4 +15,8 @@ class AppTexts {
   Text get textWhiteColor_w500_38 {
     return Text(text, style: Styles(context: context).textWhiteColor_w500_38);
   }
+
+  Text get textWhiteColor_w500_32 {
+    return Text(text, style: Styles(context: context).textWhiteColor_w500_32);
+  }
 }

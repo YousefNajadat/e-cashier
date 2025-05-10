@@ -18,5 +18,13 @@
   "requiredField": "هذا الحقل مطلوب",
   "passwordLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
   "passwordNumberValidation": "يجب أن تحتوي كلمة المرور على رقم",
-  "please_enter_your_phone_number": "الرجاء إدخال رقم هاتفك"
+  "please_enter_your_phone_number": "الرجاء إدخال رقم هاتفك",
+  "serviceControls": "عناصر التحكم في الخدمة",
+  "branchSelection": "اختيار الفرع",
+  "signOut": "تسجيل الخروج",
+  "back": "رجوع",
+  "serviceOrder": "طلب خدمة",
+  "vehicleOrder": "طلب مركبة",
+  "sparePartsOrder": "طلب قطع غيار",
+  "promissoryNote": "سند إذني"
 }

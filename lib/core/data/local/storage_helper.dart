@@ -2,7 +2,6 @@ import 'package:get_storage/get_storage.dart';
 
 import 'get_store_keys.dart';
 
-
 class StorageHelper {
   static final _storage = GetStorage();
 
@@ -37,6 +36,13 @@ class StorageHelper {
     return _storage.read(StorageKeys.permissions);
   }
 
+  static void clearPermissions() {
+    _storage.remove(StorageKeys.permissions);
+  }
+  static void signOut(){
+    clearAccessToken();
+    clearPermissions();
+  }
   // Clear all storage (for logout)
   static void clearAll() {
     _storage.erase();

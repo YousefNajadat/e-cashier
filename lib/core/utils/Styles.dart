@@ -51,6 +51,14 @@ class Styles {
       // fontFamily: FontFamily.Tajawal_Bold
     );
   }
+  TextStyle get textWhiteColor_w500_32 {
+    return TextStyle(
+      fontWeight: FontWeight.w500,
+      color: AppColors.textWhiteColor,
+      fontSize: responsiveFont(context, 9.5),
+      // fontFamily: FontFamily.Tajawal_Bold
+    );
+  }
 
   TextStyle get textWhiteColor_w400_34 {
     return TextStyle(

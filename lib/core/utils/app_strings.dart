@@ -85,4 +85,36 @@ class AppStrings {
   String get passwordNumberValidation {
     return AppLocalizations.of(context)!.passwordNumberValidation;
   }
+
+  String get serviceControls {
+    return AppLocalizations.of(context)!.serviceControls;
+  }
+
+  String get branchSelection {
+    return AppLocalizations.of(context)!.branchSelection;
+  }
+
+  String get signOut {
+    return AppLocalizations.of(context)!.signOut;
+  }
+
+  String get back {
+    return AppLocalizations.of(context)!.back;
+  }
+
+  String get serviceOrder {
+    return AppLocalizations.of(context)!.serviceOrder;
+  }
+
+  String get vehicleOrder {
+    return AppLocalizations.of(context)!.vehicleOrder;
+  }
+
+  String get sparePartsOrder {
+    return AppLocalizations.of(context)!.sparePartsOrder;
+  }
+
+  String get promissoryNote {
+    return AppLocalizations.of(context)!.promissoryNote;
+  }
 }

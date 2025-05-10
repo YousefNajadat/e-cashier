@@ -18,5 +18,13 @@
   "requiredField": "This field is required",
   "passwordLength": "Password must be at least 6 characters",
   "passwordNumberValidation": "Password must contain number",
+  "serviceControls": "Service Controls",
+  "branchSelection": "Branch Selection",
+  "signOut": "Sign Out",
+  "back": "Back",
+  "serviceOrder": "Service Order",
+  "vehicleOrder": "Vehicle Order",
+  "sparePartsOrder": "Spare Parts Order",
+  "promissoryNote": "Promissory Note",
   "please_enter_your_phone_number": "Please enter your phone number"
 }

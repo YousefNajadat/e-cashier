@@ -9,22 +9,28 @@ import '../../../../core/utils/responsive_size_helper.dart';
 
 class PhoneNumberScreen extends StatelessWidget {
   const PhoneNumberScreen({super.key});
+
   static TextEditingController phoneNumberController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return AppBackgroundScaffold(
+      padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 88)),
       isDrawerWidget: true,
       isChangeLang: true,
-      children: [
-        AppTexts(
-          context: context,
-          text: AppStrings(context: context).please_enter_your_phone_number,
-        ).textWhiteColor_w500_38,
-        Gap(responsiveHeight(context, 48)),
-        //============== phone number widget ===================================
-        CustomPhoneNumber(controller: phoneNumberController),
-      ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AppTexts(
+            context: context,
+            text: AppStrings(context: context).please_enter_your_phone_number,
+          ).textWhiteColor_w500_38,
+          Gap(responsiveHeight(context, 48)),
+          //============== phone number widget ===================================
+          CustomPhoneNumber(controller: phoneNumberController),
+        ],
+      ),
     );
   }
 }
