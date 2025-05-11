@@ -4,4 +4,5 @@ class ApiRoutes {
   static const String logInApi = 'Users/loginToken';
   static const String getBranch = "Branch/GetBranch";
   static const String  getSettingsBybranchId = "Kiosk/GetSettingsBybranchId";
+  static const String  updateBranchServiceStatus = "Kiosk/UpdateBranchServiceStatus";
 }

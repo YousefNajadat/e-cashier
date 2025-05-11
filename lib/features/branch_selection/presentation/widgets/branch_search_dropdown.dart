@@ -11,12 +11,12 @@ import '../bloc/branch_bloc.dart';
 import '../cubit/show_sign_in_button/show_sign_in_button_cubit.dart';
 
 class BranchSearchDropdown extends StatelessWidget {
-  final ValueChanged<BranchModel?>? onChanged;
+  final ValueChanged<BranchModel?> onChanged;
   final BranchModel? initialValue;
 
   const BranchSearchDropdown({
     super.key,
-    this.onChanged,
+    required this.onChanged,
     this.initialValue
   });
 
@@ -66,7 +66,7 @@ class BranchSearchDropdown extends StatelessWidget {
       },
       onSelected: (selection) {
         FocusScope.of(context).unfocus();
-        onChanged?.call(selection);
+        onChanged.call(selection);
         context.read<ShowSignInButtonCubit>().toggle(true);
       },
     );
@@ -119,7 +119,8 @@ class BranchSearchDropdown extends StatelessWidget {
       height: responsiveHeight(context, 104),
       decoration: _buildSearchFieldDecoration(context),
       padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 27)),
-      child: TextField(
+      child:
+      TextField(
         controller: controller,
         focusNode: focusNode,
         decoration: InputDecoration(
@@ -208,12 +209,12 @@ class BranchSearchDropdown extends StatelessWidget {
       width: responsiveWidth(context, 904),
       height: responsiveHeight(context, 104),
       decoration: _buildSearchFieldDecoration(context),
-      padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 27)),
-      child: const Center(
-        child: CircularProgressIndicator(color: AppColors.textWhiteColor),
+      child:  Center(
+        child: CircularProgressIndicator(color: AppColors.textWhiteColor,strokeWidth: responsiveFont(context, 2),),
       ),
     );
   }
+
 
   Widget _buildErrorWidget(BuildContext context, String message) {
     return Container(

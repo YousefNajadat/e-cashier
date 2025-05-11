@@ -32,17 +32,35 @@ class StorageHelper {
     _storage.write(StorageKeys.permissions, permissions);
   }
 
-  static Map<String, dynamic>? getPermissions() {
+  static bool getPermissions() {
     return _storage.read(StorageKeys.permissions);
   }
 
   static void clearPermissions() {
     _storage.remove(StorageKeys.permissions);
   }
-  static void signOut(){
-    clearAccessToken();
-    clearPermissions();
+
+  // Permissions
+  static setBranchId(String branchId) {
+    _storage.write(StorageKeys.branchId, branchId);
   }
+
+  static String getBranchId() {
+    return _storage.read(StorageKeys.branchId);
+  }
+
+  static void clearBranchId() {
+    _storage.remove(StorageKeys.branchId);
+  }
+
+  static void signOut() {
+    if (_storage.read(StorageKeys.permissions)) {
+      clearAccessToken();
+      clearPermissions();
+      clearBranchId();
+    }
+  }
+
   // Clear all storage (for logout)
   static void clearAll() {
     _storage.erase();

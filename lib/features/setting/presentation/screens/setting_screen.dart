@@ -1,4 +1,5 @@
 import 'package:e_cashier/core/constant/colors.dart';
+import 'package:e_cashier/core/constant/colors.dart';
 import 'package:e_cashier/core/utils/app_strings.dart';
 import 'package:e_cashier/core/utils/app_texts.dart';
 import 'package:e_cashier/core/utils/extensions/context_extension.dart';
@@ -37,13 +38,8 @@ class SettingScreen extends StatelessWidget {
       AppStrings(context: context).branchSelection,
       AppStrings(context: context).signOut,
     ];
-    return ListView.separated(
-      itemCount: settingsTexts.length,
-      separatorBuilder:
-          (context, index) => Divider(
-            color: AppColors.dividerColor,
-            height: responsiveHeight(context, 0.4),
-          ),
+    return ListView.builder(
+      itemCount: StorageHelper.getPermissions() ? settingsTexts.length : 2,
       itemBuilder:
           (context, index) => settingsWidgets(context, index, settingsTexts),
     );
@@ -74,11 +70,10 @@ class SettingScreen extends StatelessWidget {
             ],
           ),
         ),
-        if (index == 2)
-          Divider(
-            color: AppColors.dividerColor,
-            height: responsiveHeight(context, 0.4),
-          ),
+        Divider(
+          color: AppColors.dividerColor,
+          height: responsiveHeight(context, 0.4),
+        ),
       ],
     );
   }

@@ -69,6 +69,7 @@ class LogInScreen extends StatelessWidget {
                 children: [
                   Gap(responsiveHeight(context, 64)),
                   CustomTextFormField(
+                    textInputAction: TextInputAction.next,
                     controller: employeeNumberController,
                     labelText: AppStrings(context: context).employeeNumber,
                     hintText:

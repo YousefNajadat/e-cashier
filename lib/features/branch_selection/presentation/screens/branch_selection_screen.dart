@@ -1,3 +1,4 @@
+import 'package:e_cashier/core/data/local/storage_helper.dart';
 import 'package:e_cashier/core/utils/Styles.dart';
 import 'package:e_cashier/core/utils/app_strings.dart';
 import 'package:e_cashier/core/utils/extensions/context_extension.dart';
@@ -42,7 +43,11 @@ class BranchSelection extends StatelessWidget {
                   ).textWhiteColor_w500_38,
             ),
             Gap(responsiveHeight(context, 64)),
-            BranchSearchDropdown(onChanged: (branch) {}),
+            BranchSearchDropdown(
+              onChanged: (branch) {
+                StorageHelper.setBranchId((branch?.id.toString()) ?? '');
+              },
+            ),
           ],
         ),
       ),

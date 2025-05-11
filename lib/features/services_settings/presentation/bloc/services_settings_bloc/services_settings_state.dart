@@ -3,17 +3,11 @@ part of 'services_settings_bloc.dart';
 @immutable
 sealed class ServicesSettingsState {}
 
-final class ServicesSettingsInitial extends ServicesSettingsState {
-  @override
-  List<Object> get props => [];
-}
+class ServicesSettingsInitial extends ServicesSettingsState {}
 
-class ServicesSettingsLoading extends ServicesSettingsState {
-  @override
-  List<Object> get props => [];
-}
+class ServicesSettingsLoading extends ServicesSettingsState {}
 
-final class ServicesSettingsSuccess extends ServicesSettingsState {
+class ServicesSettingsSuccess extends ServicesSettingsState {
   final ServicesSettingsEntity responseData;
 
   ServicesSettingsSuccess({required this.responseData});
@@ -22,7 +16,7 @@ final class ServicesSettingsSuccess extends ServicesSettingsState {
   List<Object> get props => [responseData];
 }
 
-final class ServicesSettingsError extends ServicesSettingsState {
+class ServicesSettingsError extends ServicesSettingsState {
   final String message;
 
   ServicesSettingsError(this.message);
@@ -30,4 +24,3 @@ final class ServicesSettingsError extends ServicesSettingsState {
   @override
   List<Object> get props => [message];
 }
-

@@ -12,12 +12,15 @@ class CustomTextFormField extends StatelessWidget {
   final String? labelText;
   final bool isPassword;
   final bool isRequired;
+  final FocusNode? focusNode;
+  final Widget? suffixIcon;
+  final TextInputAction? textInputAction;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final FormFieldValidator<String>? validator;
 
   const CustomTextFormField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.isPassword = false,
     this.isRequired = false,
@@ -25,7 +28,10 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.labelText,
-  }) : super(key: key);
+    this.focusNode,
+    this.suffixIcon,
+    this.textInputAction,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +51,15 @@ class CustomTextFormField extends StatelessWidget {
             maxHeight: responsiveHeight(context, 160),
           ),
           child: TextFormField(
+            textInputAction: textInputAction,
+            focusNode: focusNode,
             controller: controller,
             onChanged: onChanged,
             obscureText: isPassword,
             validator: validator ?? (value) => _validateField(context, value),
             style: Styles(context: context).textWhiteColor_w400_32,
             decoration: InputDecoration(
+              suffixIcon: suffixIcon,
               hintText: hintText,
               hintStyle: Styles(context: context).hintTextColor_w400_32,
               border: _inputBorder(context),

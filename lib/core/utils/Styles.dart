@@ -1,6 +1,7 @@
 import 'package:e_cashier/core/utils/responsive_size_helper.dart';
 import 'package:flutter/material.dart';
 import '../constant/colors.dart';
+import '../constant/font_family.dart';
 
 class Styles {
   final BuildContext context;
@@ -12,7 +13,7 @@ class Styles {
       fontWeight: FontWeight.w500,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 12.5),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -21,7 +22,7 @@ class Styles {
       fontWeight: FontWeight.w500,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 11),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -30,7 +31,7 @@ class Styles {
       fontWeight: FontWeight.w500,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 8.5),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -39,7 +40,7 @@ class Styles {
       fontWeight: FontWeight.w400,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 9),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -48,15 +49,16 @@ class Styles {
       fontWeight: FontWeight.w400,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 9.5),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
+
   TextStyle get textWhiteColor_w500_32 {
     return TextStyle(
       fontWeight: FontWeight.w500,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 9.5),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -65,7 +67,7 @@ class Styles {
       fontWeight: FontWeight.w400,
       color: AppColors.textWhiteColor,
       fontSize: responsiveFont(context, 10),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -74,7 +76,7 @@ class Styles {
       fontWeight: FontWeight.w400,
       color: AppColors.hintTextColor,
       fontSize: responsiveFont(context, 9),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -83,7 +85,7 @@ class Styles {
       fontWeight: FontWeight.w400,
       color: AppColors.hintTextColor,
       fontSize: responsiveFont(context, 9.5),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -92,7 +94,7 @@ class Styles {
       fontWeight: FontWeight.w400,
       color: AppColors.whiteColor,
       fontSize: responsiveFont(context, 7),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 
@@ -101,7 +103,7 @@ class Styles {
       fontWeight: FontWeight.w500,
       color: AppColors.textGrayColor,
       fontSize: responsiveFont(context, 8.5),
-      // fontFamily: FontFamily.Tajawal_Bold
+      fontFamily: FontFamily.encodeSans,
     );
   }
 }
