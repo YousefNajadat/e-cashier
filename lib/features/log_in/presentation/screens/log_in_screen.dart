@@ -32,7 +32,7 @@ class LogInScreen extends StatelessWidget {
           // navigate to settings screen
           context.pushAndRemoveUntil(SettingScreen());
         } else {
-          print('no state');
+          // print('no state');
         }
       },
       builder:

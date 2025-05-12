@@ -7,9 +7,11 @@ import 'package:e_cashier/core/utils/responsive_size_helper.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/data/local/storage_helper.dart';
 import '../../../../core/widgets/app_background_scaffold.dart';
+import '../../../../core/widgets/custom_primary_button.dart';
 import '../../../../core/widgets/floating_action_button.dart';
 import '../../../branch_selection/presentation/screens/branch_selection_screen.dart';
 import '../../../services_settings/presentation/screens/services_settings _screen.dart';
+import '../widgets/sign_out_widget.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -24,7 +26,7 @@ class _SettingScreenState extends State<SettingScreen> {
   getPermissions() async {
     permission = await StorageHelper.getPermissions();
     setState(() {});
-    print(permission);
+    // print(permission);
   }
 
   @override
@@ -44,9 +46,10 @@ class _SettingScreenState extends State<SettingScreen> {
             leadingButtonText: AppStrings(context: context).back,
             context,
             text: AppStrings(context: context).singIn,
-            onPressed: () {
-              // context.pushAndRemoveUntil(ChangeLanguageScreen());
+            leadingButtonOnPressed: () {
+              context.push(BranchSelection());
             },
+            onPressed: () {},
           ),
           child: settingsListView(context),
         )
@@ -78,8 +81,7 @@ class _SettingScreenState extends State<SettingScreen> {
             } else if (index == 1) {
               context.push(BranchSelection());
             } else if (index == 2) {
-              StorageHelper.signOut();
-              context.push(BranchSelection());
+              showSignOutDialog(context);
             }
           },
           child: Row(

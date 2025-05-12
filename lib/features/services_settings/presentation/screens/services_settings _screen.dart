@@ -42,7 +42,7 @@ class ServicesSettingsScreen extends StatelessWidget {
       child: BlocConsumer<ServicesSettingsBloc, ServicesSettingsState>(
         listener: (context, state) {
           if (state is ServicesSettingsError) {
-            print('123');
+            // print('123');
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
