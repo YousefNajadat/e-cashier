@@ -28,4 +28,19 @@ class BranchRepository implements IBranchRepository {
       return const Left('An unexpected error occurred');
     }
   }
+
+  @override
+  Future<Either<String, void>> registerKiosk(int branchId) async {
+    try {
+      final response = await _remoteDataSource.registerKiosk(branchId);
+      if (response.success) {
+        return const Right(null);
+      }
+      return Left(response.message ?? "Failed to register kiosk");
+    } on DioException catch (e) {
+      return Left(e.message ?? 'Failed to register kiosk');
+    } catch (_) {
+      return const Left('An unexpected error occurred');
+    }
+  }
 }

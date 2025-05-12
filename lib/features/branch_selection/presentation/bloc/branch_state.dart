@@ -15,8 +15,9 @@ class BranchLoading extends BranchState {
 
 class BranchSuccess extends BranchState {
   final List<BranchModel> responseData;
+  final String? branchId;
 
-  BranchSuccess({required this.responseData});
+  BranchSuccess({required this.responseData, required this.branchId});
 
   @override
   List<Object> get props => [responseData];

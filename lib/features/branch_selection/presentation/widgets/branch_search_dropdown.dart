@@ -5,7 +5,7 @@ import 'package:e_cashier/core/utils/responsive_size_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/cubit/translation/translation_cubit.dart';
-import '../../../../core/di/injector.dart';
+import '../../../../core/data/local/storage_helper.dart';
 import '../../data/models/branch_model.dart';
 import '../bloc/branch_bloc.dart';
 import '../cubit/show_sign_in_button/show_sign_in_button_cubit.dart';
@@ -17,12 +17,14 @@ class BranchSearchDropdown extends StatelessWidget {
   const BranchSearchDropdown({
     super.key,
     required this.onChanged,
-    this.initialValue
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = context.read<TranslationCubit>().state.currentLocale.languageCode == 'ar';
+    final isArabic =
+        context.read<TranslationCubit>().state.currentLocale.languageCode ==
+        'ar';
 
     return BlocBuilder<BranchBloc, BranchState>(
       builder: (context, state) {
@@ -35,7 +37,12 @@ class BranchSearchDropdown extends StatelessWidget {
         }
 
         if (state is BranchSuccess) {
-          return _buildAutocompleteWidget(context, state.responseData, isArabic);
+          return _buildAutocompleteWidget(
+            context,
+            state.responseData,
+            isArabic,
+            state.branchId,
+          );
         }
 
         return const SizedBox();
@@ -44,83 +51,124 @@ class BranchSearchDropdown extends StatelessWidget {
   }
 
   Widget _buildAutocompleteWidget(
-      BuildContext context,
-      List<BranchModel> branches,
-      bool isArabic
-      ) {
+    BuildContext context,
+    List<BranchModel> branches,
+    bool isArabic,
+    String? branchId,
+  ) {
+    BranchModel? selectedBranch;
+    String? initialText;
+
+    if (branchId != null && branchId.isNotEmpty) {
+      selectedBranch = branches.firstWhere(
+        (element) => element.id.toString() == branchId,
+        orElse: () => branches.first,
+      );
+      initialText = _getDisplayString(selectedBranch, isArabic);
+    } else if (initialValue != null) {
+      initialText = _getDisplayString(initialValue!, isArabic);
+    }
+
     return Autocomplete<BranchModel>(
-      optionsBuilder: (textEditingValue) => _buildOptions(textEditingValue, branches),
+      initialValue:
+          selectedBranch != null
+              ? TextEditingValue(text: initialText ?? '')
+              : null,
+      optionsBuilder: (textEditingValue) {
+        return _buildOptions(
+          textEditingValue: textEditingValue,
+          branches: branches,
+          isArabic: isArabic,
+        );
+      },
       displayStringForOption: (branch) => _getDisplayString(branch, isArabic),
       fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-        _handleInitialValue(controller, initialValue, isArabic);
+        // Set initial text if controller is empty
+        if (initialText != null && controller.text.isEmpty) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            controller.text = initialText!;
+          });
+        }
 
         return _buildSearchField(
-            context,
-            controller,
-            focusNode,
-            onFieldSubmitted
+          context,
+          controller,
+          focusNode,
+          onFieldSubmitted,
         );
       },
       optionsViewBuilder: (context, onSelected, options) {
         return _buildOptionsView(context, options, onSelected, isArabic);
       },
-      onSelected: (selection) {
+      onSelected: (selection) async{
         FocusScope.of(context).unfocus();
         onChanged.call(selection);
-        context.read<ShowSignInButtonCubit>().toggle(true);
+        await StorageHelper.setBranchId(selection.id.toString());
+        // context.read<ShowSignInButtonCubit>().setVisible(true);
+        // context.read<ShowSignInButtonCubit>();
       },
     );
   }
 
-  List<BranchModel> _buildOptions(
-      TextEditingValue textEditingValue,
-      List<BranchModel> branches
-      ) {
-    if (textEditingValue.text.isEmpty) return branches;
+  List<BranchModel> _buildOptions({
+    required TextEditingValue textEditingValue,
+    required List<BranchModel> branches,
+    required bool isArabic,
+  }) {
+    // Always show all options when field is empty (clicked but not typed)
+    if (textEditingValue.text.isEmpty) {
+      return branches;
+    }
+
+    final searchText = textEditingValue.text.toLowerCase();
 
     return branches.where((branch) {
-      return (branch.branchNameAr?.toLowerCase().contains(
-        textEditingValue.text.toLowerCase(),
-      ) ??
-          false) ||
-          (branch.branchNameEn?.toLowerCase().contains(
-            textEditingValue.text.toLowerCase(),
-          ) ??
-              false);
+      // Get the full display string that includes services
+      final displayString = _getDisplayString(branch, isArabic).toLowerCase();
+
+      // Check against the full display string
+      return displayString.contains(searchText);
     }).toList();
   }
 
   String _getDisplayString(BranchModel branch, bool isArabic) {
-    final branchName = isArabic
-        ? (branch.branchNameAr ?? branch.branchNameEn ?? '')
-        : (branch.branchNameEn ?? branch.branchNameAr ?? '');
+    final branchName =
+        isArabic
+            ? (branch.branchNameAr ?? branch.branchNameEn ?? '')
+            : (branch.branchNameEn ?? branch.branchNameAr ?? '');
+
     final servicesText = _getFormattedServices(branch, isArabic);
     return '$branchName$servicesText';
   }
 
-  void _handleInitialValue(
-      TextEditingController controller,
-      BranchModel? initialValue,
-      bool isArabic
-      ) {
-    if (initialValue != null && controller.text.isEmpty) {
-      controller.text = _getDisplayString(initialValue, isArabic);
-    }
+  String _getFormattedServices(BranchModel branch, bool isArabic) {
+    if (branch.services == null || branch.services!.isEmpty) return '';
+
+    final serviceNames = branch.services!
+        .map(
+          (service) =>
+              isArabic
+                  ? (service.nameAr ?? service.nameEn ?? '')
+                  : (service.nameEn ?? service.nameAr ?? ''),
+        )
+        .where((name) => name.isNotEmpty)
+        .join(', ');
+
+    return serviceNames.isNotEmpty ? ' ($serviceNames)' : '';
   }
 
   Widget _buildSearchField(
-      BuildContext context,
-      TextEditingController controller,
-      FocusNode focusNode,
-      VoidCallback onFieldSubmitted,
-      ) {
+    BuildContext context,
+    TextEditingController controller,
+    FocusNode focusNode,
+    VoidCallback onFieldSubmitted,
+  ) {
     return Container(
       width: responsiveWidth(context, 904),
       height: responsiveHeight(context, 104),
       decoration: _buildSearchFieldDecoration(context),
       padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 27)),
-      child:
-      TextField(
+      child: TextField(
         controller: controller,
         focusNode: focusNode,
         decoration: InputDecoration(
@@ -138,11 +186,11 @@ class BranchSearchDropdown extends StatelessWidget {
   }
 
   Widget _buildOptionsView(
-      BuildContext context,
-      Iterable<BranchModel> options,
-      AutocompleteOnSelected<BranchModel> onSelected,
-      bool isArabic,
-      ) {
+    BuildContext context,
+    Iterable<BranchModel> options,
+    AutocompleteOnSelected<BranchModel> onSelected,
+    bool isArabic,
+  ) {
     return Align(
       alignment: Alignment.topLeft,
       child: Material(
@@ -178,7 +226,7 @@ class BranchSearchDropdown extends StatelessWidget {
                     context,
                     option,
                     isArabic,
-                        () => onSelected(option),
+                    () => onSelected(option),
                   );
                 },
               ),
@@ -190,11 +238,11 @@ class BranchSearchDropdown extends StatelessWidget {
   }
 
   Widget _buildBranchItem(
-      BuildContext context,
-      BranchModel branch,
-      bool isArabic,
-      VoidCallback onTap,
-      ) {
+    BuildContext context,
+    BranchModel branch,
+    bool isArabic,
+    VoidCallback onTap,
+  ) {
     return ListTile(
       title: Text(
         _getDisplayString(branch, isArabic),
@@ -209,12 +257,14 @@ class BranchSearchDropdown extends StatelessWidget {
       width: responsiveWidth(context, 904),
       height: responsiveHeight(context, 104),
       decoration: _buildSearchFieldDecoration(context),
-      child:  Center(
-        child: CircularProgressIndicator(color: AppColors.textWhiteColor,strokeWidth: responsiveFont(context, 2),),
+      child: Center(
+        child: CircularProgressIndicator(
+          color: AppColors.textWhiteColor,
+          strokeWidth: responsiveFont(context, 2),
+        ),
       ),
     );
   }
-
 
   Widget _buildErrorWidget(BuildContext context, String message) {
     return Container(
@@ -229,21 +279,6 @@ class BranchSearchDropdown extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getFormattedServices(BranchModel branch, bool isArabic) {
-    if (branch.services == null || branch.services!.isEmpty) return '';
-
-    final serviceNames = branch.services!
-        .map(
-          (service) => isArabic
-          ? (service.nameAr ?? service.nameEn ?? '')
-          : (service.nameEn ?? service.nameAr ?? ''),
-    )
-        .where((name) => name.isNotEmpty)
-        .join(' And ');
-
-    return serviceNames.isNotEmpty ? ' ($serviceNames)' : '';
   }
 
   BoxDecoration _buildSearchFieldDecoration(BuildContext context) {

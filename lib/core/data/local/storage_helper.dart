@@ -1,68 +1,77 @@
-import 'package:get_storage/get_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'get_store_keys.dart';
 
 class StorageHelper {
-  static final _storage = GetStorage();
-
   // Language
-  static setLang(String lang) {
-    _storage.write(StorageKeys.lang, lang);
+  static setLang(String lang) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(SharedKeys.lang, lang);
   }
 
-  static String? getLang() {
-    return _storage.read(StorageKeys.lang);
+  static Future<String?> getLang() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(SharedKeys.lang);
   }
 
   // Token
-  static setAccessToken(String token) {
-    _storage.write(StorageKeys.accessToken, token);
+  static setAccessToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(SharedKeys.accessToken, token);
   }
 
-  static String? getAccessToken() {
-    return _storage.read(StorageKeys.accessToken);
+  static Future<String?> getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString(SharedKeys.accessToken) ?? '';
+    return token;
   }
 
-  static void clearAccessToken() {
-    _storage.remove(StorageKeys.accessToken);
-  }
-
-  // Permissions
-  static setPermissions(bool permissions) {
-    _storage.write(StorageKeys.permissions, permissions);
-  }
-
-  static bool getPermissions() {
-    return _storage.read(StorageKeys.permissions);
-  }
-
-  static void clearPermissions() {
-    _storage.remove(StorageKeys.permissions);
+  static void clearAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(SharedKeys.accessToken);
   }
 
   // Permissions
-  static setBranchId(String branchId) {
-    _storage.write(StorageKeys.branchId, branchId);
+  static setPermissions(bool permissions) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(SharedKeys.permissions, permissions);
   }
 
-  static String getBranchId() {
-    return _storage.read(StorageKeys.branchId);
+  static Future<bool> getPermissions() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isPermissions = prefs.getBool(SharedKeys.permissions) ?? true;
+    return isPermissions;
   }
 
-  static void clearBranchId() {
-    _storage.remove(StorageKeys.branchId);
+  static void clearPermissions() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(SharedKeys.permissions);
   }
 
-  static void signOut() {
-    if (_storage.read(StorageKeys.permissions)) {
+  // BranchId
+  static setBranchId(String branchId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(SharedKeys.branchId, branchId);
+  }
+
+  static Future<String> getBranchId() async {
+    final prefs = await SharedPreferences.getInstance();
+    var branchId = prefs.getString(SharedKeys.branchId) ?? '';
+    return branchId;
+  }
+
+  static void clearBranchId() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(SharedKeys.branchId);
+  }
+
+  static void signOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isPermissions = await getPermissions();
+    if (isPermissions) {
       clearAccessToken();
       clearPermissions();
       clearBranchId();
     }
-  }
-
-  // Clear all storage (for logout)
-  static void clearAll() {
-    _storage.erase();
   }
 }

@@ -1,6 +1,13 @@
+// show_sign_in_button_cubit.dart
 part of 'show_sign_in_button_cubit.dart';
 
 @immutable
-sealed class ShowSignInButtonState {}
+abstract class ShowSignInButtonState {}
 
-final class ShowSignInButtonInitial extends ShowSignInButtonState {}
+class ShowSignInButtonInitial extends ShowSignInButtonState {
+  final bool visible;
+  ShowSignInButtonInitial({required this.visible});
+}
+
+class ShowSignInButtonLoading extends ShowSignInButtonState {}
+

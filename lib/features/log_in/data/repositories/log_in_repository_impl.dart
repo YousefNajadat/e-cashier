@@ -2,6 +2,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
+import '../../../../core/data/local/storage_helper.dart';
 import '../../domain/entities/log_in_entity.dart';
 import '../../domain/params/log_in_parameters.dart';
 import '../../domain/repositories/i_log_in_repository.dart';
@@ -22,7 +23,9 @@ class LogInRepository implements ILogInRepository {
       if (!response.success) {
         return Left(response.message ?? "Login failed");
       }
-
+      await StorageHelper.setPermissions(
+        response.permissions?.accessLogOut ?? false,
+      );
       final loginResponse = LoginResponse(
         accessToken: response.accessToken!,
         permissions: response.permissions!,

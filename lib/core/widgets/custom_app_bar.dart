@@ -12,11 +12,13 @@ import '../utils/app_strings.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final bool isChangeLang;
+  final void Function()? onPressed;
 
   const CustomAppBar({
     super.key,
     required this.height,
     required this.isChangeLang,
+    this.onPressed,
   });
 
   @override
@@ -32,9 +34,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
-      leading: isChangeLang ? IconButton(
+      leading:
+          isChangeLang
+              ? IconButton(
                 onPressed: () {
                   context.read<TranslationCubit>().toggleLanguage();
+                  if(onPressed != null) onPressed!();
                 },
                 icon: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,8 +53,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-              ) : null,
-      leadingWidth: isChangeLang ? responsiveWidth(context, 250) : 0,
+              )
+              : null,
+      leadingWidth: isChangeLang ? responsiveWidth(context, 300) : 0,
       centerTitle: true,
       title: svgWidget(context, ImagesPath.app_name, 91, 225),
     );

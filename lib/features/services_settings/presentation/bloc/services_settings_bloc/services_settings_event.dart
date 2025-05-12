@@ -6,9 +6,9 @@ sealed class ServicesSettingsEvent {
 }
 
 class GetServicesSettingsEvent extends ServicesSettingsEvent {
-  final ServicesSettingsParameters parameters;
+  final ServicesSettingsParameters? parameters;
 
-  const GetServicesSettingsEvent({required this.parameters});
+  const GetServicesSettingsEvent({this.parameters});
 }
 
 class UpdateServiceStatusEvent extends ServicesSettingsEvent {

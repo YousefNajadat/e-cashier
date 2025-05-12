@@ -22,6 +22,7 @@ class AppProviders {
       BlocProvider(create: (_) => getIt<LogInBloc>()),
       BlocProvider(create: (_) => getIt<UpdateBranchServiceStatusBloc>()),
       BlocProvider(create: (_) => getIt<ServicesSettingsBloc>()),
+      BlocProvider(create: (context) => ShowSignInButtonCubit()),
     ];
   }
 }

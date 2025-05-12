@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:e_cashier/core/network/request_data.dart';
 import 'package:flutter/foundation.dart';
@@ -20,8 +21,38 @@ class ECashierRest implements IECashierRest {
     "Access-Control-Allow-Credentials": true,
   };
 
+  Future<String> _getIpAddress() async {
+    try {
+      final interfaces = await NetworkInterface.list();
+      for (var interface in interfaces) {
+        for (var addr in interface.addresses) {
+          if (!addr.isLoopback && addr.type == InternetAddressType.IPv4) {
+            return addr.address;
+          }
+        }
+      }
+    } catch (e) {
+      developer.log('Error getting IP: $e');
+    }
+    return '127.0.0.1'; // Fallback
+  }
+
+  Future<void> _updateKioskHeaders() async {
+    try {
+      final ipAddress = await _getIpAddress();
+      _baseHeaders['X-Kiosk-Identifier'] = ipAddress;
+      _dio.options.headers = _baseHeaders;
+    } catch (e) {
+      developer.log('Failed to get IP address: $e');
+      _baseHeaders['X-Kiosk-Identifier'] = 'unknown';
+    }
+  }
+
   ECashierRest({this.enableLog = true}) {
     _dio.options.baseUrl = ApiRoutes.baseUrl;
+
+    // Initialize IP headers
+    _updateKioskHeaders();
     _dio.options.headers = _baseHeaders;
 
     _dio.interceptors.clear();
@@ -49,7 +80,7 @@ class ECashierRest implements IECashierRest {
     String? userToken,
   }) async {
     try {
-      final requestData = _prepareRequest(
+      final requestData = await _prepareRequest(
         data: null,
         headers: headers,
         queryParameters: queryParameters,
@@ -63,7 +94,7 @@ class ECashierRest implements IECashierRest {
       );
 
       return _handleResponse(response);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return _handleDioError(e);
     }
   }
@@ -77,7 +108,7 @@ class ECashierRest implements IECashierRest {
     String? userToken,
   }) async {
     try {
-      final requestData = _prepareRequest(
+      final requestData = await _prepareRequest(
         data: data,
         headers: headers,
         queryParameters: queryParameters,
@@ -106,7 +137,7 @@ class ECashierRest implements IECashierRest {
     String? userToken,
   }) async {
     try {
-      final requestData = _prepareRequest(
+      final requestData = await _prepareRequest(
         data: data,
         headers: headers,
         queryParameters: queryParameters,
@@ -135,7 +166,7 @@ class ECashierRest implements IECashierRest {
     String? userToken,
   }) async {
     try {
-      final requestData = _prepareRequest(
+      final requestData = await _prepareRequest(
         data: data,
         headers: headers,
         queryParameters: queryParameters,
@@ -163,7 +194,7 @@ class ECashierRest implements IECashierRest {
     String? userToken,
   }) async {
     try {
-      final requestData = _prepareRequest(
+      final requestData = await _prepareRequest(
         data: null,
         headers: headers,
         queryParameters: queryParameters,
@@ -185,22 +216,22 @@ class ECashierRest implements IECashierRest {
     }
   }
 
-  RequestData _prepareRequest({
+  Future<RequestData> _prepareRequest({
     dynamic data,
     Map<String, dynamic>? headers,
     Map<String, dynamic>? queryParameters,
     String? userToken,
-  }) {
+  }) async {
     final requestHeaders = Map<String, dynamic>.from(headers ?? _baseHeaders);
 
     // Add common headers
     requestHeaders.addAll({
-      'lang': StorageHelper.getLang() ?? 'en',
+      'lang': await StorageHelper.getLang() ?? 'en',
       'DeviceDate': DateTime.now().toIso8601String(),
     });
 
     // Add authorization header if token exists
-    final token = userToken ?? StorageHelper.getAccessToken();
+    final token = userToken ?? await StorageHelper.getAccessToken();
     if (token != null && token.isNotEmpty) {
       requestHeaders['Authorization'] = 'Bearer $token';
     }

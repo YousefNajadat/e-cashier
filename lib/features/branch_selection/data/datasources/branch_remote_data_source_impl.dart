@@ -13,4 +13,11 @@ class BranchRemoteDataSource implements IBranchRemoteDataSource {
   Future<ApiResponse> getBranch() async {
     return await eCashierRest.get(ApiRoutes.getBranch);
   }
+
+  @override
+  Future<ApiResponse> registerKiosk(int branchId) async {
+    return await eCashierRest.post(
+      '${ApiRoutes.registerKiosk}?branchId=$branchId',
+    );
+  }
 }

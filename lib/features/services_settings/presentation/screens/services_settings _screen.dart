@@ -1,3 +1,4 @@
+import 'package:e_cashier/core/utils/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -26,29 +27,68 @@ class ServicesSettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final branchId = StorageHelper.getBranchId();
+    // final branchId = StorageHelper.getBranchId();
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create:
-              (_) => ServicesSettingsBloc(getIt())..add(
-                GetServicesSettingsEvent(
-                  parameters: ServicesSettingsParameters(branchId: branchId),
-                ),
-              ),
+              (_) =>
+                  ServicesSettingsBloc(getIt())
+                    ..add(GetServicesSettingsEvent()),
         ),
         BlocProvider(create: (_) => UpdateBranchServiceStatusBloc(getIt())),
       ],
       child: BlocConsumer<ServicesSettingsBloc, ServicesSettingsState>(
         listener: (context, state) {
           if (state is ServicesSettingsError) {
+            print('123');
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
+          if (state is ServicesSettingsError) {
+            return AppBackgroundScaffold(
+              padding: EdgeInsets.symmetric(
+                horizontal: responsiveWidth(context, 60),
+              ),
+              // isDrawerWidget: true,
+              floatingActionButton: BlocBuilder<
+                UpdateBranchServiceStatusBloc,
+                UpdateBranchServiceStatusState
+              >(
+                builder: (context, updateState) {
+                  return buildFloatingActionButton(
+                    showLeadingButton: true,
+                    showTrailButton: false,
+                    leadingButtonText: AppStrings(context: context).back,
+                    context,
+                    isLoading: updateState is UpdateBranchServiceStatusLoading,
+                    text: AppStrings(context: context).back,
+                    onPressed: () {
+                      context.pop();
+                    },
+                  );
+                },
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppTexts(
+                    context: context,
+                    text: 'invalid branch id',
+                  ).textWhiteColor_w500_42,
+                  AppTexts(
+                    context: context,
+                    text: 'please go back and change branch',
+                  ).textWhiteColor_w500_32,
+                ],
+              ),
+            );
+          }
           if (state is ServicesSettingsLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -72,13 +112,14 @@ class ServicesSettingsScreen extends StatelessWidget {
 
     return AppBackgroundScaffold(
       padding: EdgeInsets.symmetric(horizontal: responsiveWidth(context, 60)),
-      isDrawerWidget: true,
+      // isDrawerWidget: true,
       floatingActionButton: BlocBuilder<
         UpdateBranchServiceStatusBloc,
         UpdateBranchServiceStatusState
       >(
         builder: (context, updateState) {
           return buildFloatingActionButton(
+            showTrailButton: true,
             showLeadingButton: true,
             leadingButtonText: AppStrings(context: context).back,
             context,
@@ -95,8 +136,11 @@ class ServicesSettingsScreen extends StatelessWidget {
     );
   }
 
-  void _submitChanges(BuildContext context, List<ServicesEntity> services) {
-    final branchId = StorageHelper.getBranchId();
+  void _submitChanges(
+    BuildContext context,
+    List<ServicesEntity> services,
+  ) async {
+    final branchId = await StorageHelper.getBranchId();
     final bloc = context.read<UpdateBranchServiceStatusBloc>();
 
     for (final service in services) {
@@ -105,7 +149,7 @@ class ServicesSettingsScreen extends StatelessWidget {
           parameters: UpdateBranchServiceStatusParameters(
             serviceId: service.serviceId!,
             isEnabled: service.isEnabled!,
-            branchId: branchId,
+            branchId: branchId ?? '',
           ),
         ),
       );

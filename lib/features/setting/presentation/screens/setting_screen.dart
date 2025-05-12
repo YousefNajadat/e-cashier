@@ -11,25 +11,46 @@ import '../../../../core/widgets/floating_action_button.dart';
 import '../../../branch_selection/presentation/screens/branch_selection_screen.dart';
 import '../../../services_settings/presentation/screens/services_settings _screen.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
 
   @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen> {
+  bool permission = false;
+
+  getPermissions() async {
+    permission = await StorageHelper.getPermissions();
+    setState(() {});
+    print(permission);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getPermissions();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AppBackgroundScaffold(
-      isDrawerWidget: true,
-      floatingActionButton: buildFloatingActionButton(
-        showLeadingButton: true,
-        showTrailButton: false,
-        leadingButtonText: AppStrings(context: context).back,
-        context,
-        text: AppStrings(context: context).singIn,
-        onPressed: () {
-          // context.pushAndRemoveUntil(ChangeLanguageScreen());
-        },
-      ),
-      child: settingsListView(context),
-    );
+    return permission
+        ? AppBackgroundScaffold(
+          // isDrawerWidget: true,
+          floatingActionButton: buildFloatingActionButton(
+            showLeadingButton: true,
+            showTrailButton: false,
+            leadingButtonText: AppStrings(context: context).back,
+            context,
+            text: AppStrings(context: context).singIn,
+            onPressed: () {
+              // context.pushAndRemoveUntil(ChangeLanguageScreen());
+            },
+          ),
+          child: settingsListView(context),
+        )
+        : CircularProgressIndicator();
   }
 
   Widget settingsListView(BuildContext context) {
@@ -39,7 +60,7 @@ class SettingScreen extends StatelessWidget {
       AppStrings(context: context).signOut,
     ];
     return ListView.builder(
-      itemCount: StorageHelper.getPermissions() ? settingsTexts.length : 2,
+      itemCount: permission ? settingsTexts.length : 2,
       itemBuilder:
           (context, index) => settingsWidgets(context, index, settingsTexts),
     );

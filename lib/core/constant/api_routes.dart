@@ -5,4 +5,6 @@ class ApiRoutes {
   static const String getBranch = "Branch/GetBranch";
   static const String  getSettingsBybranchId = "Kiosk/GetSettingsBybranchId";
   static const String  updateBranchServiceStatus = "Kiosk/UpdateBranchServiceStatus";
+  static const String registerKiosk = '/Branch/GetKioskIDByBranches';
+
 }

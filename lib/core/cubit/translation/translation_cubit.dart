@@ -23,7 +23,7 @@ class TranslationCubit extends Cubit<TranslationState> {
   }
 
   void setLanguage() async {
-    String? langCode =  StorageHelper.getLang();
+    String? langCode = await StorageHelper.getLang();
     String languageCode;
     if (langCode == null) {
       languageCode = LanguageLocalCodes.english.toString();

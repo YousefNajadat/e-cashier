@@ -1,4 +1,5 @@
 import 'package:e_cashier/core/utils/extensions/context_extension.dart';
+import 'package:e_cashier/features/setting/presentation/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -13,7 +14,7 @@ import '../utils/app_strings.dart';
 import '../utils/responsive_size_helper.dart';
 import 'image_widget.dart';
 
-Widget appBackgroundScaffoldDrawer(BuildContext context) {
+Widget appBackgroundScaffoldDrawer(BuildContext context, bool isUserLoggedIn) {
   return Container(
     width: responsiveWidth(context, 655),
     decoration: BoxDecoration(
@@ -34,9 +35,7 @@ Widget appBackgroundScaffoldDrawer(BuildContext context) {
           children: [
             Theme(
               data: Theme.of(context).copyWith(
-                dividerTheme: const DividerThemeData(
-                  color: Colors.transparent,
-                ),
+                dividerTheme: const DividerThemeData(color: Colors.transparent),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -76,7 +75,9 @@ Widget appBackgroundScaffoldDrawer(BuildContext context) {
                 ],
               ),
               onTap: () {
-                context.push(LogInScreen());
+                isUserLoggedIn
+                    ? context.push(SettingScreen())
+                    : context.push(LogInScreen());
               },
             ),
           ],
@@ -97,9 +98,8 @@ Widget appBackgroundScaffoldDrawer(BuildContext context) {
                       builder: (context, state) {
                         return Text(
                           '${AppStrings(context: context).version} '
-                              '${state is PackageInfoLoaded ? state.packageInfo?.version : ''}',
-                          style:
-                          Styles(context: context).textGrayColor_w400_28,
+                          '${state is PackageInfoLoaded ? state.packageInfo?.version : ''}',
+                          style: Styles(context: context).textGrayColor_w400_28,
                         );
                       },
                     ),

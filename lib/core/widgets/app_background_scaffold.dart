@@ -7,17 +7,19 @@ import 'package:e_cashier/core/constant/gifs_path.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import '../cubit/translation/translation_cubit.dart';
+import '../data/local/storage_helper.dart';
 import '../utils/Styles.dart';
 import '../utils/app_strings.dart';
 import 'app_background_scaffold_drawer.dart';
 import 'custom_app_bar.dart';
 
-class AppBackgroundScaffold extends StatelessWidget {
+class AppBackgroundScaffold extends StatefulWidget {
   final Widget child;
   final bool isChangeLang;
   final Widget? floatingActionButton;
   final bool isDrawerWidget;
   final EdgeInsets padding;
+  final void Function()? onPressed;
 
   AppBackgroundScaffold({
     super.key,
@@ -25,10 +27,29 @@ class AppBackgroundScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.isChangeLang = false,
     this.isDrawerWidget = false,
-    this.padding = EdgeInsets.zero,
+    this.padding = EdgeInsets.zero, this.onPressed,
   });
 
+  @override
+  State<AppBackgroundScaffold> createState() => _AppBackgroundScaffoldState();
+}
+
+class _AppBackgroundScaffoldState extends State<AppBackgroundScaffold> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isUserLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkUserLoginStatus();
+  }
+
+  Future<void> _checkUserLoginStatus() async {
+    final token = await StorageHelper.getAccessToken();
+    setState(() {
+      isUserLoggedIn = token != null && token.isNotEmpty;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +64,21 @@ class AppBackgroundScaffold extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerFloat,
           drawerEnableOpenDragGesture: true,
           drawerScrimColor: Colors.transparent,
           backgroundColor: Colors.transparent,
           key: scaffoldKey,
           endDrawer:
-              isDrawerWidget ? appBackgroundScaffoldDrawer(context) : null,
-          floatingActionButton: floatingActionButton,
+          widget.isDrawerWidget ? appBackgroundScaffoldDrawer(
+              context, isUserLoggedIn) : null,
+          floatingActionButton: widget.floatingActionButton,
           extendBodyBehindAppBar: true,
           appBar: CustomAppBar(
+            onPressed:widget.onPressed,
             height: responsiveHeight(context, 179),
-            isChangeLang: isChangeLang,
+            isChangeLang: widget.isChangeLang,
           ),
           body: GestureDetector(
             onTap: () {
@@ -76,9 +100,11 @@ class AppBackgroundScaffold extends StatelessWidget {
                 // area for the child content (centered)
                 Center(
                   child: Container(
-                    height: MediaQuery.sizeOf(context).height,
-                    padding: padding,
-                    child: child,
+                    height: MediaQuery
+                        .sizeOf(context)
+                        .height,
+                    padding: widget.padding,
+                    child: widget.child,
                   ),
                 ),
               ],

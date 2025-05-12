@@ -29,9 +29,6 @@ class LogInScreen extends StatelessWidget {
           ).showSnackBar(SnackBar(content: Text(state.message)));
         } else if (state is LogInSuccess) {
           StorageHelper.setAccessToken(state.responseData.accessToken);
-          StorageHelper.setPermissions(
-            state.responseData.permissions.accessLogOut,
-          );
           // navigate to settings screen
           context.pushAndRemoveUntil(SettingScreen());
         } else {
@@ -62,7 +59,7 @@ class LogInScreen extends StatelessWidget {
                   }
                 },
               ),
-              isDrawerWidget: true,
+              // isDrawerWidget: true,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../../features/branch_selection/data/datasources/branch_remote_data_source_impl.dart';
 import '../../features/branch_selection/data/repositories/branch_repository_impl.dart';
 import '../../features/branch_selection/domain/usecases/branch_usecase.dart';
+import '../../features/branch_selection/domain/usecases/register_kiosk_usecase.dart';
 import '../../features/branch_selection/presentation/bloc/branch_bloc.dart';
 import '../../features/branch_selection/presentation/cubit/show_sign_in_button/show_sign_in_button_cubit.dart';
 import '../../features/log_in/data/datasources/log_in_remote_data_source.dart';
@@ -62,6 +63,9 @@ Future<void> setupDependencies() async {
   getIt.registerSingleton<BranchUseCase>(
     BranchUseCase(repository: getIt<BranchRepository>()),
   );
+  getIt.registerSingleton<RegisterKioskUseCase>(
+    RegisterKioskUseCase(repository: getIt<BranchRepository>()),
+  );
   getIt.registerSingleton<LogInUseCase>(
     LogInUseCase(repository: getIt<LogInRepository>()),
   );
@@ -80,7 +84,9 @@ Future<void> setupDependencies() async {
   // Blocs & Cubits
   getIt.registerFactory<TranslationCubit>(() => TranslationCubit());
   getIt.registerFactory<PackageInfoCubit>(() => PackageInfoCubit());
-  getIt.registerFactory<BranchBloc>(() => BranchBloc(getIt<BranchUseCase>()));
+  getIt.registerFactory<BranchBloc>(
+    () => BranchBloc(getIt<BranchUseCase>(), getIt<RegisterKioskUseCase>()),
+  );
   getIt.registerFactory<LogInBloc>(() => LogInBloc(getIt<LogInUseCase>()));
 
   getIt.registerFactory<ServicesSettingsBloc>(
