@@ -79,11 +79,11 @@ class ServicesSettingsScreen extends StatelessWidget {
                 children: [
                   AppTexts(
                     context: context,
-                    text: 'invalid branch id',
+                    text: AppStrings(context: context).invalid_branch_id,
                   ).textWhiteColor_w500_42,
                   AppTexts(
                     context: context,
-                    text: 'please go back and change branch',
+                    text: AppStrings(context: context).please_go_back_and_change_branch,
                   ).textWhiteColor_w500_32,
                 ],
               ),

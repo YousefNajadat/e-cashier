@@ -117,4 +117,11 @@ class AppStrings {
   String get promissoryNote {
     return AppLocalizations.of(context)!.promissoryNote;
   }
+
+  String get please_go_back_and_change_branch {
+    return AppLocalizations.of(context)!.please_go_back_and_change_branch;
+  }
+  String get invalid_branch_id {
+    return AppLocalizations.of(context)!.invalid_branch_id;
+  }
 }

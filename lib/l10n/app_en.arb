@@ -26,5 +26,7 @@
   "vehicleOrder": "Vehicle Order",
   "sparePartsOrder": "Spare Parts Order",
   "promissoryNote": "Promissory Note",
+  "invalid_branch_id": "Invalid Branch ID",
+  "please_go_back_and_change_branch": "Please go back and change the Branch",
   "please_enter_your_phone_number": "Please enter your phone number"
 }

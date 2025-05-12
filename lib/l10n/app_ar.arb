@@ -26,5 +26,7 @@
   "serviceOrder": "طلب خدمة",
   "vehicleOrder": "طلب مركبة",
   "sparePartsOrder": "طلب قطع غيار",
+  "invalid_branch_id": "معرف الفرع غير صالح",
+  "please_go_back_and_change_branch": "يرجى الرجوع وتغيير الفرع",
   "promissoryNote": "سند إذني"
 }
